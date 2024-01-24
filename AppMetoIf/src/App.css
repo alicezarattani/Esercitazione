@@ -1,0 +1,38 @@
+body {
+  background-image: url("assets/landscape-fictional-digital-art-illustration-portrait-railway-2253826-wallhere.com.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+}
+
+#root {
+  padding: 2px;
+  text-align: center;
+  color: rgb(0, 0, 0);
+}
+
+.Search-Icon {
+  background-color: #fff;
+  margin-left: 10px;
+  width: 43px;
+  height: 38px;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.weatherLocation {
+  font-size: 50px;
+}
+
+.temp,
+.windRate,
+.humidityPercent {
+  font-size: 40px;
+  font-weight: 500;
+}
+
+.next {
+  object-fit: cover;
+  width: 80px;
+  height: 60px;
+}
