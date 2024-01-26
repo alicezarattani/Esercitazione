@@ -15,10 +15,13 @@ import moment from "moment";
 function Main() {
   let api_key = "a7c18d8f0c760dc2d008770529ee33da";
 
+  //setto gli stati per memorizzare l'icona del tempo corrente e le previsioni per i giorni futuri
   const [wicon, setWicon] = useState([]);
   const [forecastData, setForecastData] = useState([]);
 
+  //funzione asincrona che viene chiamata quando si fa click sul bottone di ricerca
   const search = async () => {
+    //recupero il valore inserito dall'utente nella casella di input
     const element = document.getElementsByClassName("cityInput");
     if (element[0].value === "") {
       return 0;
@@ -26,6 +29,8 @@ function Main() {
 
     let url = `https://api.openweathermap.org/data/2.5/forecast?q=${element[0].value}&units=Metric&APPID=${api_key}`;
     let response = await fetch(url);
+    //response aspetta una risposta dall'url che fa la chiamata api per ottenere i dati meteo della città inserita e li memorizza
+    //data memorizza la risposta ricevuta in json
     let data = await response.json();
 
     const humidity = document.getElementsByClassName("humidityPercent");
@@ -33,7 +38,7 @@ function Main() {
     const temperature = document.getElementsByClassName("temp");
     const location = document.getElementsByClassName("weatherLocation");
 
-    // Raggruppa i dati per giorno
+    //la funzione groupedData raggruppa i dati di ogni giorno in un array
     const groupedData = data.list.reduce((acc, item) => {
       const day = moment(item.dt_txt).format("YYYY-MM-DD");
       if (!acc[day]) {
@@ -43,29 +48,30 @@ function Main() {
       return acc;
     }, {});
 
-    // Estrai i dati relativi a oggi
+    //estraggo i dati relativi al giorno di oggi
     const todayData = groupedData[moment().format("YYYY-MM-DD")];
 
     if (!todayData || todayData.length === 0) {
-      // Nessun dato disponibile per oggi
+      //funzione di controllo nel caso i dati non siano disponibili
       return;
     }
 
+    //recupero dal file json i diversi dati che poi verranno inseriti in HTML
     humidity[0].innerHTML = todayData[0].main.humidity + "%";
     wind[0].innerHTML = todayData[0].wind.speed + "km/h";
     temperature[0].innerHTML = todayData[0].main.temp + "°C";
     location[0].innerHTML = data.city.name;
 
-    // Imposta solo i dati relativi a oggi per l'icona
+    //setWicon utilizza la funzione getForecastIcon per impostare l'icona del meteo del giorno corrente
     setWicon(getForecastIcon(todayData[0].weather[0].main));
 
-    // Estrai i dati relativi ai 3 giorni successivi
+    //estraggo i dati relativi ai giorni successivi
     const nextDaysData = Object.values(groupedData)
-      .filter((dayData) => dayData[0].dt_txt !== todayData[0].dt_txt) // Escludi il giorno corrente
-      .slice(0, 3); // Prendi solo i dati per i prossimi 3 giorni
+      .filter((dayData) => dayData[0].dt_txt !== todayData[0].dt_txt) //li filtro per escludere quelli del giorno corrente
+      .slice(0, 4); //con lo slice prendo solo i dati dei prossimi 4 giorni
 
-    // Imposta i dati relativi ai 3 giorni successivi per le previsioni
-    setForecastData(nextDaysData.flatMap((dayData) => dayData.slice(1, 8)));
+    //setto i dati relativi ai giorni successivi e faccio uno slice per prendere solo i dati relativi a un giorno alla volta
+    setForecastData(nextDaysData.flatMap((dayData) => dayData.slice(1, 2)));
   };
 
   return (
