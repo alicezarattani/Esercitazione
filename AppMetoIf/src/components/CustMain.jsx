@@ -144,7 +144,7 @@ function Main() {
   );
 }
 
-// Funzione di supporto per ottenere l'icona in base alle condizioni meteorologiche di previsione
+//funzione che permette di ottenere l'icona in base alle condizioni meteorologiche, utilizza lo switch case per settare ogni condizione sulla base della parola che trova nel file json
 const getForecastIcon = (weatherMain) => {
   switch (weatherMain) {
     case "Clear":
